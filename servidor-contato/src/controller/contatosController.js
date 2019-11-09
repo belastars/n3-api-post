@@ -1,5 +1,6 @@
 const model = require("../model/contatos");
 
+
 const getAll = (request, response) => {
   console.log(request.url);
   response.status(200).send(model.agenda);
@@ -11,23 +12,26 @@ const getAll = (request, response) => {
 // };
 
 
-const postAdd = (request,response) => {
-
-let contato = request.body
-contato.id = Math.random().toString(36).substr(-8)
-console.log(contato)
-model.agenda.contatos.push(contato)
-//console.log(request.body.nome)
-// model.agenda.contatos.push(request.body)
-//console.log(request.body)
-response.status(200).send()
-//model.agenda.contatos.push(contato)
+const pushAdd = (request,response) => {
+     const contato =request.body;
+     contato.id = Math.random().toString(36).substr(-8)
+     let contatoExistente = model.agenda.contatos.find(item => item.nome == contato.nome)
+      
+     console.log(contatoExistente)
+     
+     if(contatoExistente){
+        response.status(400).send("Este contato já existe!")
+      } else{
+        model.agenda.contatos.push(contato)
+        response.status(201).send("Contato cadastrado com Sucesso")
+      }
+     
 }
 
 
 module.exports = {
   getAll,
-  //getById,
-  postAdd
+  pushAdd
+
 }
 
